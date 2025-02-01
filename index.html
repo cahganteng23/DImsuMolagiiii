@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dimsum Navigation with Logo and Card</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* General styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    /* Navbar Styles */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #FF6F00; /* Orange color */
+      padding: 10px 20px;
+      position: fixed; /* Fixed Navbar */
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.8em;
+      color: white;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+    }
+
+    .nav-links li {
+      margin-left: 20px;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: white;
+      font-size: 1.1em;
+      transition: color 0.3s;
+    }
+
+    .nav-links li a:hover {
+      color: #000;
+    }
+
+    /* Mobile Menu Icon */
+    .menu-icon {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .menu-icon span {
+      width: 25px;
+      height: 3px;
+      background-color: white;
+      margin: 5px 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        background-color: #FF6F00;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        padding: 20px 0;
+        text-align: center;
+        z-index: 1;
+      }
+
+      .nav-links li {
+        margin: 10px 0;
+      }
+
+      .menu-icon {
+        display: flex;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+    }
+
+    /* Animated Logo */
+    .animated-logo {
+      display: block;
+      margin: 80px auto; /* Jarak lebih jauh antara logo dan navbar */
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background-color: white;
+      background-image: url('img/log.png'); /* Ganti dengan logo Anda */
+      background-size: cover;
+      animation: rotate 5s infinite linear;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Card Section */
+    .card-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 50px;
+      flex-wrap: wrap;
+      margin-top: 10px; /* Jarak lebih dekat antara logo dan card */
+    }
+
+    .card {
+      display: flex;
+      flex-direction: row; /* Menyusun foto di samping list di desktop */
+      align-items: center;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 600px; /* Panjang card di desktop */
+      height: 400px; /* Memperpanjang card di desktop */
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s;
+    }
+
+    .card img {
+      width: 200px; /* Memperbesar ukuran foto */
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-left: 20px; /* Jarak foto ke list */
+    }
+
+    .card ul {
+      list-style: none;
+      padding-left: 0;
+      font-size: 1.1em;
+      width: 100%;
+      text-align: left; /* List di sebelah kiri */
+    }
+
+    .card ul h1 {
+      font-size: 1.6em;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .card ul li {
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #FF6F00; /* Orange color */
+      color: white;
+      border-radius: 5px;
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .card ul li:hover {
+      background-color: #e65c00; /* Darker orange on hover */
+      transform: translateY(-5px);
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+    }
+
+    /* Responsive for cards */
+    @media (max-width: 768px) {
+      .card-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card {
+        width: 90%;
+        height: auto;
+        margin-bottom: 20px;
+        flex-direction: column; /* Foto dan list berada dalam kolom di mobile */
+      }
+
+      .card img {
+        width: 150px;
+        height: 150px;
+        margin-top: 20px; /* Foto di bawah list */
+      }
+
+      .card ul h1 {
+        font-size: 1.4em;
+      }
+
+      .card ul li {
+        font-size: 1em;
+      }
+    }
+    .dui{
+      font-family: Arial, sans-serif;
+     
+     
+      height: 100vh;
+      background-color: #f26522;font-family: Arial, sans-serif;
+     
+     
+ 
+    }
+ .car1d-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      padding: 50px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+ .car1d {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      overflow: hidden;
+      width: 90%;
+      max-width: 600px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+
+    .car1d img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+    }
+
+    .car1d h2 {
+      margin: 20px 0 10px;
+      font-size: 1.6em;
+      color: #333;
+    }
+
+    .car1d p {
+      font-size: 1.1em;
+      text-align: center;
+    }
+
+    .car1d.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Section for Pengertian */
+    #pengertian {
+      margin-top: 100px;
+      padding: 50px;
+      text-align: center;
+    }
+    .dy {
+      font-family: Arial, sans-serif;
+     
+     
+      height: 100vh;
+      background-color: #f7f7f7;
+  }
+  .flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+    .card3-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+  }
+  
+  .card3 {
+      width: 280px;
+      background-color: orange;
+      color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+  }
+  
+  .card3 img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+  }
+  
+  .card3 h3 {
+      padding: 10px 0;
+      font-size: 1.5rem;
+      background-color: #ff7f00;
+  }
+  
+  .card3 p {
+      padding: 10px;
+      font-size: 1rem;
+  }
+  
+  .card3:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+      .card3 {
+          width: 100%;
+          max-width: 320px;
+      }
+  }   
+  .dyy {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f26522;
+}
+
+.co3ntainer {
+    text-align: center;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.video-icon img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.video-icon img:hover {
+    transform: scale(1.1);
+}
+
+/* Responsiveness */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .video-icon img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+.bdy {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f7f7f7;
+}
+
+.card4-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card4 {
+  width: 300px;
+  background-color: rgb(255, 115, 0);
+  color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  border: 2px solid #695e5b;
+}
+
+.card4 img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card4 h3 {
+  padding: 10px 0;
+  font-size: 1.5rem;
+  background-color: #ff5722;
+  color: white;
+}
+
+.card4 .price {
+  padding: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: #ff5722;
+  color: white;
+}
+
+.card4 .rating {
+  padding: 10px;
+}
+
+.card4 .rating label {
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin: 0 2px;
+}
+
+.card4 .rating .filled {
+  color: gold;
+}
+
+.card4 button {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.card4 button:hover {
+  background-color: #d84315;
+}
+
+.card4:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .card4 {
+      width: 100%;
+      max-width: 320px;
+  }
+}
+.body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.c1ontainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  width: 90%;
+}
+.table-c1ontainer, .chart-c1ontainer {
+  flex: 1;
+  width: 100%;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+table th, table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+table th {
+  background-color: #007BFF;
+  color: #fff;
+}
+.result {
+  font-size: 1.2em;
+  color: #333;
+  margin-top: 20px;
+}
+.highlight {
+  color: #00d9ff;
+  font-weight: bold;
+}
+@media (min-width: 768px) {
+  .c1ontainer {
+      flex-direction: row;
+      align-items: flex-start;
+  }
+  .table-c1ontainer, .chart-c1ontainer {
+      width: 50%;
+  }
+}
+/* Responsif untuk mobile */
+@media (max-width: 768px) {
+  .c1ontainer {
+      flex-direction: column;
+  }
+  .table-c1ontainer, .chart-c1ontainer {
+      width: 100%;
+      margin-bottom: 20px;
+  }
+  .chart-c1ontainer canvas {
+      max-width: 100% !important;
+  }
+}
+.bodd {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f7f7f7;
+}
+.card5-contai11ner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+.card5 {
+  position: relative;
+  width: 250px;
+  height: 350px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+.video-icon{
+  color: #ddd;
+  background-color: #ddd;
+}
+.card5 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+.card5 .description {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.card5:hover {
+  transform: translateY(-10px);
+}
+.card5:hover .description {
+  opacity: 1;
+}
+.card5:hover img {
+  opacity: 0.3;
+}
+@media (max-width: 768px) {
+  .card5 {
+    width: 200px;
+    height: 300px;
+  }
+}
+@media (max-width: 480px) {
+  .card5 {
+    width: 180px;
+    height: 280px;
+  }
+}
+button a{
+  text-decoration: none;
+  color: #ddd;
+}
+.ddy {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+.footer input {
+  padding: 10px;
+  width: 60%;
+  border: none;
+  border-radius: 5px;
+}
+.footer button {
+  padding: 10px;
+  background: #ff9800;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.notification {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">DimsuMolagi</div>
+    <div class="menu-icon" id="menu-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <ul class="nav-links" id="nav-links">
+        <li><a href="#page1">BERANDA</a></li>
+        <li><a href="#pengertian" id="pengertian-link">PENGERTIAN</a></li>
+        <li><a href="#page2">ALAT & BAHAN</a></li>
+        <li><a href="#menu">PEMBUATAN</a></li>
+        <li><a href="#hasil">HASIL</a></li>
+        <li><a href="#hpp">HPP</a></li>
+        <li><a href="#dkk">DOKUMENTASI</a></li>
+    </ul>
+  </nav>
+
+  <!-- Animated Logo (above card) -->
+  <div class="animated-logo" id="page1"></div>
+
+  <!-- Card Section (1 card with list) -->
+  <div class="card-container" >
+    <div class="card">
+      <ul>
+        <h1>NAMA KELOMPOK:</h1>
+        <li> 1) Alifah Siska Nur Aini (2)</li>
+        <li> 2) Ayu Fitriana Sari (6)</li>
+        <li> 3) Dahlia Anggita Salam (11)</li>
+        <li> 4) Muhammad Mahesa Anggarestu (22)</li>
+        <li> 5) Ria Mustika Sari (34)</li>
+        <li> 6) Rio Putra Prasetyono (35)</li>
+      </ul>
+      <img src="img/kelom.jpg" alt="Group Photo"> <!-- Foto di card -->
+    </div>
+  </div><br><br><br><br>
+
+  <script>
+    const menuIcon = document.getElementById('menu-icon');
+    const navLinks = document.getElementById('nav-links');
+
+    menuIcon.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Scroll to section when menu item is clicked
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Show Pengertian card on scroll or when PENGERTIAN menu is clicked
+    function showPengertianCard() {
+      const card = document.getElementById('pengertian-card');
+      card.classList.add('show');
+    }
+
+    // Detect when scrolling to show card
+    window.addEventListener('scroll', function() {
+      const card = document.getElementById('pengertian-card');
+      const cardPosition = card.getBoundingClientRect().top;
+      const screenPosition = window.innerHeight / 1.2;
+
+      if (cardPosition < screenPosition) {
+        card.classList.add('show');
+      }
+    });
+
+    // Trigger showPengertianCard when PENGERTIAN menu item is clicked
+    document.getElementById('pengertian-link').addEventListener('click', showPengertianCard);
+  </script>
+
+  <section id="pengertian">
+   <div class="dui">
+    <h1>Apa itu Dimsum?</h1>
+    <div class="car1d-container">
+      <div class="car1d" id="pengertian-card">
+        <img src="img/dimsum.jpg" alt="Dimsum Image">
+        <h2>Dimsum</h2>
+        <p>Dimsum adalah makanan khas Tiongkok yang terdiri dari berbagai jenis makanan kecil yang dikukus atau digoreng.</p>
+      </div>
+    </div>
+   </div>
+  </section>
+ 
+ <div class="dy">
+  <center><h1 id="page2">Alat & Bahan</h1></center><br><br><br>
+  <div class="flex">
+    <div class="card3-container">
+      <div class="card3">
+          <img src="img/pooo.jpg" alt="Gambar 1">
+          <h3>Alat</h3>
+          <p>1.Kukusan 2. Mangkuk 3. Pisau 4. Rolling pin 5. Cetakan dimsum (opsional) 6. Sendok 7. Piring atau nampan 8. Kuas makanan (opsional) 9. Panci atau wajan 10. Blender</p>
+               
+      </div>
+      <div class="card3">
+          <img src="img/bahan.jpg" alt="Gambar 2">
+          <h3>Bahan"</h3>
+          <p>1.penyedap rasa 2.daging ayam 3.minyak wijen 4.daun bawang 5.lada bubuk 6.kulit dimsum 7.tepung tapioka</p>
+      </div>
+  </div>
+  </div><br><br>
+ 
+ </div>
+ <div class="dyy" id="menu">
+  <div class="co3ntainer">
+    <h1>Pembuatan</h1>
+    <h1>klik icon di bawah ini</h1>
+    <div class="video-icon">
+        <a href="https://youtu.be/0TTLz8a8pAY?si=8MwiiYhqCzpnJryF"><img src="https://img.icons8.com/ios/452/video.png" alt="Video Icon" id="videoIcon"></a>
+    </div>
+</div>
+
+</div>
+<div class="bdy" id="hasil">
+  <div class="card4-container">
+    <div class="card4">
+        <img src="img/hasil.jpg" alt="Produk 1">
+        <h3>DimsuMolagi</h3>
+        <p class="price">Rp 5000</p>
+        <div class="rating">
+            <label for="star1" class="star" data-index="1">&#9733;</label>
+            <label for="star2" class="star" data-index="2">&#9733;</label>
+            <label for="star3" class="star" data-index="3">&#9733;</label>
+            <label for="star4" class="star" data-index="4">&#9733;</label>
+            <label for="star5" class="star" data-index="5">&#9733;</label>
+        </div>
+        <button><a href="coba.html">Beli sekarang</a></button>
+    </div>
+</div>
+
+<script>
+    // Menangani klik pada bintang
+    const stars = document.querySelectorAll('.rating .star');
+
+    stars.forEach(star => {
+        star.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+
+            // Hapus kelas 'filled' dari semua bintang
+            stars.forEach(star => star.classList.remove('filled'));
+
+            // Tambahkan kelas 'filled' ke bintang yang dipilih dan bintang sebelumnya
+            for (let i = 0; i < index; i++) {
+                stars[i].classList.add('filled');
+            }
+        });
+    });
+</script>
+</div>
+
+
+<div class="body">
+  <section id="hpp">
+      <div class="c1ontainer">
+          <div class="table-c1ontainer">
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Item</th>
+                          <th>Nilai</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr><td>Modal</td><td>Rp <span id="modal">0</span></td></tr>
+                      <tr><td>Biaya Bahan Baku</td><td>Rp <span id="bahanBaku">0</span></td></tr>
+                      <tr><td>Jumlah Produk Dijual</td><td><span id="produkDijual">0</span> biji</td></tr>
+                      <tr><td>Jumlah Porsi Terjual</td><td><span id="porsiTerjual">0</span> porsi</td></tr>
+                      <tr><td>Harga per Porsi</td><td>Rp <span id="hargaPerPorsi">0</span></td></tr>
+                      <tr><td>Total Penjualan</td><td>Rp <span id="totalPenjualan">0</span></td></tr>
+                  </tbody>
+              </table>
+              <h3>Cara Perhitungan:</h3>
+              <p><strong>Total Penjualan:</strong> Harga per Porsi x Jumlah Porsi Terjual</p>
+              <p><strong>Laba Kotor:</strong> Modal - Biaya Bahan Baku + Total Penjualan</p>
+              <p><strong>Laba Bersih:</strong> Laba Kotor - Biaya Bahan Baku</p>
+              <p class="result">Laba Bersih: <span class="highlight" id="labaBersih">Rp 0</span></p>
+          </div>
+          <div class="chart-c1ontainer">
+              <canvas id="chart"></canvas>
+          </div>
+      </div>
+  </section>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const modal = 60000;
+          const biayaBahanBaku = 56000;
+          const totalProdukDijual = 61;
+          const jumlahPorsiTerjual = 17;
+          const hargaPerPorsi = 5000;
+          const totalPendapatan = jumlahPorsiTerjual * hargaPerPorsi;
+          const labaKotor = modal - biayaBahanBaku + totalPendapatan;
+          const labaBersih = labaKotor - biayaBahanBaku;
+
+          document.getElementById('modal').innerText = modal.toLocaleString();
+          document.getElementById('bahanBaku').innerText = biayaBahanBaku.toLocaleString();
+          document.getElementById('produkDijual').innerText = totalProdukDijual;
+          document.getElementById('porsiTerjual').innerText = jumlahPorsiTerjual;
+          document.getElementById('hargaPerPorsi').innerText = hargaPerPorsi.toLocaleString();
+          document.getElementById('totalPenjualan').innerText = totalPendapatan.toLocaleString();
+          document.getElementById('labaBersih').innerText = `Rp ${labaBersih.toLocaleString()}`;
+
+          const ctx = document.getElementById('chart').getContext('2d');
+          const chart = new Chart(ctx, {
+              type: 'pie',
+              data: {
+                  labels: ['Modal', 'Biaya Bahan Baku', 'Pendapatan'],
+                  datasets: [{
+                      data: [0, 0, 0],
+                      backgroundColor: ['#007BFF', '#FF6347', '#28A745'],
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  plugins: { legend: { position: 'top' } },
+                  animation: {
+                      animateScale: true,
+                      animateRotate: true,
+                      duration: 2000
+                  }
+              }
+          });
+          setTimeout(() => {
+              chart.data.datasets[0].data = [modal, biayaBahanBaku, totalPendapatan];
+              chart.update();
+          }, 500);
+      });
+  </script>
+ </div><br><br><br><br><br>
+ 
+<div class="bodd" id="dkk">
+ 
+  <div class="card5-contai11ner">
+    <div class="card5">
+      <img src="img/k3.jpg" alt="Image 1">
+      <div class="description">Dokumentasi</div>
+    </div>
+    <div class="card5">
+      <img src="img/k2.jpg" alt="Image 2">
+      <div class="description">Dokumentasi</div>
+    </div>
+    <div class="card5">
+      <img src="img/k1.jpg" alt="Image 3">
+      <div class="description">Dokumentasi</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="footer">
+  <input type="text" id="feedback" placeholder="Masukkan saran Anda...">
+  <button onclick="sendFeedback()">Kirim</button>
+</div>
+<div id="notification" class="notification">
+  Saran Anda telah diterima!
+</div>
+
+<script>
+  function sendFeedback() {
+      let feedback = document.getElementById("feedback").value;
+      if (feedback.trim() !== "") {
+          let xhr = new XMLHttpRequest();
+          xhr.open("POST", "simpan_saran.php", true);
+          xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+          xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4 && xhr.status === 200) {
+                  document.getElementById("notification").style.display = "block";
+                  setTimeout(() => {
+                      document.getElementById("notification").style.display = "none";
+                  }, 2000);
+                  document.getElementById("feedback").value = "";
+              }
+          };
+          xhr.send("saran=" + encodeURIComponent(feedback));
+      }
+  }
+</script>
+<!-- Div untuk menampilkan pesan di tengah halaman -->
+
+</body>
+</html>
